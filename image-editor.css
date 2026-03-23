@@ -1,0 +1,234 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #0F1729;
+    color: #ffffff;
+    overflow: hidden;
+}
+
+.editor-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* 顶部工具栏 */
+.toolbar {
+    background-color: #0F1729;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #334155;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.toolbar-left, .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    margin-right: 30px;
+}
+
+.brand-logo {
+    height: 28px;
+    width: auto;
+}
+
+.tool-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tool-btn {
+    background-color: #1E293B;
+    border: 1px solid #334155;
+    color: #E2E8F0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.tool-btn:hover {
+    background-color: #334155;
+    border-color: #475569;
+}
+
+.tool-btn.active {
+    background-color: #3B82F6;
+    border-color: #3B82F6;
+    color: white;
+}
+
+.tool-btn.primary {
+    background-color: #10B981;
+    border-color: #10B981;
+    color: white;
+}
+
+.tool-btn.primary:hover {
+    background-color: #059669;
+    border-color: #059669;
+}
+
+.tool-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 颜色和大小控制 */
+.color-size-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 15px;
+    border-right: 1px solid #334155;
+}
+
+.color-picker, .size-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #E2E8F0;
+}
+
+.color-picker input[type="color"] {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.size-picker input[type="number"] {
+    width: 50px;
+    padding: 4px 8px;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    background-color: #1E293B;
+    color: #E2E8F0;
+    font-size: 14px;
+}
+
+.size-picker span {
+    color: #94A3B8;
+    font-size: 12px;
+}
+
+/* 图片浏览区 */
+.image-area {
+    flex: 1;
+    background-color: #0F1729;
+    overflow: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    position: relative;
+    min-height: 400px;
+    padding: 0;
+}
+
+.canvas-container {
+    position: absolute;
+    display: inline-block;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    left: 0;
+    top: 0;
+}
+
+#imageCanvas, #editCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#imageCanvas {
+    z-index: 1;
+    pointer-events: none;
+}
+
+#editCanvas {
+    z-index: 2;
+    pointer-events: auto;
+}
+
+
+
+#editCanvas.line-mode,
+#editCanvas.rectangle-mode,
+#editCanvas.blur-mode,
+#editCanvas.arrow-mode,
+#editCanvas.text-mode {
+    cursor: crosshair;
+}
+
+#editCanvas.eraser-mode {
+    cursor: grab;
+}
+
+#editCanvas.eraser-mode:active {
+    cursor: grabbing;
+}
+
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #1E293B;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #475569;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #64748B;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .toolbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+    }
+    
+    .toolbar-left, .toolbar-right {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .color-size-controls {
+        border-right: none;
+        border-bottom: 1px solid #334155;
+        padding-bottom: 12px;
+    }
+    
+    .modal-content {
+        min-width: 300px;
+        margin: 20px;
+    }
+}

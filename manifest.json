@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "截图标注助手",
+  "version": "1.3.7",
+  "description": "记录网页操作并自动生成带标注的步骤截图，支持一键导出 ZIP。",
+  "icons": {
+    "16": "icon.png",
+    "32": "icon.png", 
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "action": {
+    "default_title": "Guide Automator",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "32": "icon.png",
+      "48": "icon.png"
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "storage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["lib/*", "ttf/*", "image-editor.html", "image-editor.css", "image-editor.js", "title.svg", "Title.png", "m.svg", "edit.svg", "copy.svg", "delete.svg", "arrow.svg", "pointer.svg", "script.svg", "rubber.svg"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

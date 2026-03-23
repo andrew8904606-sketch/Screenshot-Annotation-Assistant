@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>截图标注助手</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-content">
+        <div class="title-container">
+          <img src="Title.png" alt="截图标注助手" class="title-image" style="height: 24px; width: auto;">
+        </div>
+        <button class="settings-btn" id="settingsToggle">
+          <img src="setting.svg" alt="设置" class="settings-icon" style="height: 18px; width: auto; color: #FFFFFF;">
+        </button>
+      </div>
+      <p id="statusDisplay" class="status">
+        <span class="status-indicator inactive"></span>
+        <span data-i18n="状态">状态</span>：<span data-i18n="休息中">休息中</span>
+      </p>
+    </header>
+
+
+
+    <!-- 画廊区域 -->
+    <section class="gallery-section fade-in">
+      <div class="gallery-header">
+        <h2 data-i18n="截图画廊">截图画廊</h2>
+        <span id="stepCounter" class="step-counter">0 张截图</span>
+      </div>
+      <div id="gallery" class="gallery"></div>
+    </section>
+
+    <!-- 操作按钮区域 - 合并所有功能按钮 -->
+    <section class="section-card actions fade-in">
+      <!-- 捕获控制按钮组 -->
+      <div id="captureButtonGroup">
+        <button id="startBtn" class="primary large" data-i18n="开始捕获">开始捕获</button>
+        <div id="captureControls" class="capture-controls hidden">
+          <button id="pauseBtn" data-i18n="暂停">暂停</button>
+          <button id="resumeBtn" class="ghost hidden" data-i18n="继续">继续</button>
+          <button id="stopBtn" data-i18n="完成捕获">完成</button>
+        </div>
+      </div>
+      
+      <!-- 导出和清空按钮 -->
+      <div class="export-dropdown">
+        <button id="exportBtn" class="primary" data-i18n="导出为">导出为</button>
+        <div class="dropdown-menu" id="exportDropdown">
+          <button class="dropdown-item" data-export-type="zip" data-i18n="图片压缩包">图片压缩包</button>
+          <button class="dropdown-item" data-export-type="pdf" data-i18n="PDF文档">PDF文档</button>
+        </div>
+      </div>
+      <button id="clearCacheBtn" class="danger" data-i18n="清空图片">清空</button>
+    </section>
+
+    <!-- PDF标题输入模态框 -->
+    <div class="modal-overlay" id="pdfModal" style="display: none;">
+      <div class="modal-content">
+        <h3 data-i18n="输入PDF标题">输入PDF标题</h3>
+        <input type="text" id="pdfTitleInput" class="modal-input" placeholder="请输入标题" data-i18n-placeholder="请输入标题|Please enter title">
+        <div class="modal-buttons">
+          <button id="pdfCancelBtn" class="modal-btn ghost" data-i18n="取消">取消</button>
+          <button id="pdfConfirmBtn" class="modal-btn primary" disabled data-i18n="确认">确认</button>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+
+
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="lib/jszip.min.js"></script>
+  <script src="lib/jspdf.min.js"></script>
+  <script src="popup.js"></script>
+  
+  <!-- 设置面板 -->
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-header">
+      <h3 data-i18n="设置">设置</h3>
+      <span class="close-btn">×</span>
+    </div>
+    <div class="settings-content">
+      <label for="language-select" data-i18n="语言设置">语言设置</label>
+      <select id="language-select" class="language-select">
+        <option value="zh-CN">简体中文</option>
+        <option value="en">English</option>
+      </select>
+      
+      <div class="settings-section">
+        <div class="settings-section-header">
+          <span data-i18n="标注颜色">标注颜色</span>
+          <span class="arrow">▼</span>
+        </div>
+        <div class="color-presets-container">
+          <div class="color-presets" id="colorPresets">
+            <button class="color-preset" data-color="#DC2626" style="background-color: #DC2626;"></button>
+            <button class="color-preset" data-color="#2563EB" style="background-color: #2563EB;"></button>
+            <button class="color-preset" data-color="#10B981" style="background-color: #10B981;"></button>
+            <button class="color-preset" data-color="#F59E0B" style="background-color: #F59E0B;"></button>
+            <button class="color-preset" data-color="#8B5CF6" style="background-color: #8B5CF6;"></button>
+            <button class="color-preset custom-color" data-color="#FFFFFF" style="background-color: #FFFFFF; position: relative;">
+              <svg class="add-icon" viewBox="0 0 1024 1024" width="12" height="12">
+                <path d="M906.212134 565.732986 565.732986 565.732986 565.732986 906.212134C565.732986 926.013685 541.666486 959.972 511.97312 959.972 482.297674 959.972 458.213254 926.013685 458.213254 906.212134L458.213254 565.732986 117.734106 565.732986C97.950475 565.732986 63.97424 541.666486 63.97424 511.97312 63.97424 482.279754 97.950475 458.213254 117.734106 458.213254L458.213254 458.213254 458.213254 117.734106C458.213254 97.950475 482.297674 63.97424 511.97312 63.97424 541.666486 63.97424 565.732986 97.950475 565.732986 117.734106L565.732986 458.213254 906.212134 458.213254C925.995765 458.213254 959.972 482.279754 959.972 511.97312 959.972 541.666486 925.995765 565.732986 906.212134 565.732986Z" fill="#666666"></path>
+              </svg>
+            </button>
+          </div>
+          <input type="color" id="customColorPicker" class="color-picker-hidden" value="#FFFFFF">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+</body>
+</html>
